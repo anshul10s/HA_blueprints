@@ -1,0 +1,127 @@
+blueprint:
+  name: Ikea 2 Button remote
+  description: |
+    Ikea 2 button remote configure 6 events, on/off short, on/off while long press and on/off after long press
+  domain: automation
+  source_url: https://gist.github.com/codycodes/f051781c35cfdfee15162ff680c9cbd8
+  input:
+    button:
+      name: IKEA TRADFRI remote control
+      description: Select the remote control you wish to use.
+      selector:
+        device:
+          integration: zha
+          manufacturer: IKEA of Sweden
+          model: TRADFRI on/off switch
+    on_short_action:
+      name: On Short Press Action
+      description: Action to perform after pressing ON shortly
+      default: []
+      selector:
+        action:
+    on_long_after_action:
+      name: On Long Press Action
+      description: Action to perform after pressing ON for a long period
+      default: []
+      selector:
+        action:
+    while_on_long_action:
+      name: While On Long Action
+      description: Action to perform until On button is kept pressed for long
+      default: []
+      selector:
+        action: 
+    off_short_action:
+      name: Off Short Press Action
+      description: Action to perform after pressing Off shortly
+      default: []
+      selector:
+        action:
+    off_long_after_action:
+      name: Off Long Press Action
+      description: Action to perform after pressing Off for a long period
+      default: []
+      selector:
+        action:
+    while_off_long_action:
+      name: While Off Long Action
+      description: Action to perform until Off button is kept pressed for long
+      default: []
+      selector:
+        action:        
+
+mode: single
+
+trigger:
+  - device_id: !input button
+    domain: zha
+    platform: device
+    type: remote_button_short_press
+    subtype: turn_on
+    id: on_short
+  - device_id: !input button
+    domain: zha
+    platform: device
+    type: remote_button_short_press
+    subtype: turn_off
+    id: off_short
+  - device_id: !input button
+    domain: zha
+    platform: device
+    type: remote_button_long_release
+    subtype: dim_up
+    id: on_long
+  - device_id: !input button
+    domain: zha
+    platform: device
+    type: remote_button_long_release
+    subtype: dim_down
+    id: off_long
+  - device_id: !input button
+    domain: zha
+    platform: device
+    type: remote_button_long_press
+    subtype: dim_up
+    id: on_long_while
+  - device_id: !input button
+    domain: zha
+    platform: device
+    type: remote_button_long_press
+    subtype: dim_down
+    id: off_long_while
+condition: []
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: on_short
+        sequence: !input on_short_action
+      - conditions:
+          - condition: trigger
+            id: off_short
+        sequence: !input off_short_action
+      - conditions:
+          - condition: trigger
+            id: on_long
+        sequence: !input off_long_after_action
+      - conditions:
+          - condition: trigger
+            id: off_long
+        sequence: !input on_long_after_action
+      - conditions:
+          - condition: trigger
+            id: on_long_while
+        sequence: !input while_on_long_action
+      - conditions:
+          - condition: trigger
+            id: off_long_while
+        sequence: !input while_off_long_action
+
+    default:
+      - service: persistent_notification.create
+        data:
+          message:
+            Ikea 2 button remote ran default event from "choose" action on button press!
+            Please check any automations which may not be handling this event!
+          notification_id: ikea_2_button_notification
+          title: Uncaught Ikea 2 button Command
