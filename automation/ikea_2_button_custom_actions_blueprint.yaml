@@ -3,7 +3,7 @@ blueprint:
   description: |
     Ikea 2 button remote configure 6 events, on/off short, on/off while long press and on/off after long press
   domain: automation
-  source_url: https://gist.github.com/codycodes/f051781c35cfdfee15162ff680c9cbd8
+  source_url: https://raw.githubusercontent.com/anshul10s/HA_blueprints/969cdf71d35c6fe9d4c5297159d8becdb6b2ff14/automation/ikea_2_button_custom_actions_blueprint.yaml
   input:
     button:
       name: IKEA TRADFRI remote control
