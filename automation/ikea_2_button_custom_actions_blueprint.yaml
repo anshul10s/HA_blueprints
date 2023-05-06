@@ -103,11 +103,11 @@ action:
       - conditions:
           - condition: trigger
             id: on_long
-        sequence: !input off_long_after_action
+        sequence: !input on_long_after_action
       - conditions:
           - condition: trigger
             id: off_long
-        sequence: !input on_long_after_action
+        sequence: !input off_long_after_action
       - conditions:
           - condition: trigger
             id: on_long_while
